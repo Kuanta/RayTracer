@@ -11,12 +11,14 @@
 class RayMath
 {
 public:
-    inline static real Random()
+    constexpr static double pi = 3.1415926535897932385;
+
+    static real Random()
     {
         return rand() / (RAND_MAX + 1.0);
     }
 
-    inline static real Random(real min, real max)
+    static real Random(real min, real max)
 
     {
         real randomNormal = RayMath::Random();
@@ -28,6 +30,16 @@ public:
         if(value < min) return min;
         if(value > max) return max;
         return value;
+    }
+
+    inline static real DegToRad(real deg)
+    {
+        return deg * pi / 180.0;
+    }
+
+    inline static real RadToDeg(real rad)
+    {
+        return rad * 180.0 / pi;
     }
 };
 #endif //RAYTRACER_UTILS_H

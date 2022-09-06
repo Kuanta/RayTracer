@@ -25,12 +25,28 @@ bool Sphere::hit(const Ray &ray, real tMin, real tMax, HitPoint &hitPoint) const
     real t = (-halfB - sqrt(discriminant))/a;
     if( t < tMin || t > tMax)
     {
-        return false;
+        t = (-halfB + sqrt(discriminant))/a;
+        if(t < tMin || tMax < t)
+        {
+            return false;
+        }
     }
     Vector3 hitPosition = ray.GetPoint(t);
-    Vector3 hitNormal = hitPosition - center;
+    Vector3 hitNormal = (hitPosition - center) / radius;
     hitPoint.point = hitPosition;
     hitPoint.normal = hitNormal;
     hitPoint.t = t;
     return true;
+}
+
+Vector3 Sphere::RandomInUnitSphere()
+{
+    while(true)
+    {
+        Vector3 p = Vector3::Random(-1,1);
+        real mag = p.sqrMagnitude();
+        if(mag < 1){
+            return p;
+        }
+    }
 }

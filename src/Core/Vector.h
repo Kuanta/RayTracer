@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 #include "./configs.h"
+#include "utils.h"
 
 using std::sqrt;
 
@@ -28,9 +29,13 @@ public:
     Vector3 normalized();
     real getDistance(const Vector3& v);
     real magnitude();
+    real sqrMagnitude();
     real dot(Vector3 other);
     std::string toString();
     void normalize();
+
+    static Vector3 Random(real min, real max);
+    static Vector3 Random();
 };
 
 class Vector2

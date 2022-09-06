@@ -6,7 +6,8 @@
 #include "Core/Vector.h"
 #include "Core/Color.h"
 
-Color RayColor(const Scene &scene, const Ray& ray);
+const int RAY_DEPTH = 50;
+Color RayColor(const Scene &scene, const Ray& ray, int depth = 0);
 
 int main() {
 
@@ -27,17 +28,17 @@ int main() {
 
     //Scene
     Scene scene;
-    Sphere* centerSphere = new Sphere(Vector3(0.7,0.2,-1), 0.5);
+    Sphere* centerSphere = new Sphere(Vector3(0,0,-1), 0.5);
     centerSphere->color = Vector3(0.5f, 0.2f, 0.9f);
 
-    Sphere* leftSphere = new Sphere(Vector3(-0.5, 0.2, -1.5), 0.6);
+    Sphere* leftSphere = new Sphere(Vector3(-0.9, 0.2, -1.5), 0.6);
     leftSphere->color = Vector3(0.8f,0.4f,0.5f);
 
     Sphere* groundSphere = new Sphere(Vector3(0,-100.5,-1), 100);
     groundSphere->color = Vector3(0.2f, 0.9f, 0.4f);
 
     scene.AddObject(centerSphere);
-    scene.AddObject(leftSphere);
+    //scene.AddObject(leftSphere);
     scene.AddObject(groundSphere);
 
     std::cerr<<"Starting\n";
@@ -53,7 +54,7 @@ int main() {
                 auto u = (w + RayMath::Random()) / (imageWidth - 1);
                 auto v = (h + RayMath::Random()) / (imageHeight - 1);
                 Ray ray = camera.GetRay(u, v);
-                Color sampleColor = RayColor(scene, ray);
+                Color sampleColor = RayColor(scene, ray, 0);
                 finalColor = finalColor+sampleColor;
             }
             write_color(std::cout, finalColor, samplesPerPixel);
@@ -63,18 +64,24 @@ int main() {
     std::cerr<<"\nDone\n";
 }
 
-Color RayColor(const Scene &scene, const Ray& ray)
+Color RayColor(const Scene &scene, const Ray& ray, int depth)
 {
+    if(depth >= RAY_DEPTH) {
+        return Vector3(0,0,0);
+    }
     Vector3 lightDirection = Vector3(0.5f, -0.8f, -1.0f);
     //Check Sphere
     HitPoint hitPoint;
-    if(scene.CastRay(ray, Vector2(0,100), hitPoint))
+    Vector2 rayLimits = Vector2(0, 100);
+    if(scene.CastRay(ray,  rayLimits, hitPoint))
     {
-        Vector3 surfaceNormal = hitPoint.normal;
-        surfaceNormal.normalize();
-        real dotProd = (lightDirection * -1).dot(surfaceNormal);
-        dotProd = std::max<real>(dotProd, 0);
-        return hitPoint.color * dotProd;
+        Vector3 target = hitPoint.point + hitPoint.normal + Sphere::RandomInUnitSphere();
+        Ray bouncingRay = Ray(hitPoint.point, target - hitPoint.point);
+        return RayColor(scene, bouncingRay, depth + 1) * 0.5;
+//        surfaceNormal.normalize();
+//        real dotProd = (lightDirection * -1).dot(surfaceNormal);
+//        dotProd = std::max<real>(dotProd, 0);
+//        return hitPoint.color * dotProd;
     }
     Vector3 unitDirection = ray.Direction().normalized();
     real t = 0.5 * (unitDirection.y + 1.0f);

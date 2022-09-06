@@ -1,4 +1,4 @@
-#include "../include/Core/Vector.h"
+#include "Vector.h"
 
 //Vector3
 Vector3::Vector3()
@@ -64,7 +64,11 @@ real Vector3::getDistance(const Vector3& v)
 }
 real Vector3::magnitude()
 {
-    return sqrt(this->x*this->x + this->y*this->y + this->z*this->z);
+    return sqrt(sqrMagnitude());
+}
+real Vector3::sqrMagnitude()
+{
+    return this->x*this->x + this->y*this->y + this->z*this->z;
 }
 real Vector3::dot(Vector3 other)
 {
@@ -82,6 +86,16 @@ void Vector3::normalize()
     this->x = this->x / mag;
     this->y = this->y / mag;
     this->z = this->z / mag;
+}
+
+Vector3 Vector3::Random()
+{
+    return Vector3(RayMath::Random(), RayMath::Random(), RayMath::Random());
+}
+
+Vector3 Vector3::Random(real min, real max)
+{
+    return Vector3(RayMath::Random(min, max), RayMath::Random(min, max), RayMath::Random(min, max));
 }
 
 //Vector2

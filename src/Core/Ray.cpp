@@ -2,7 +2,7 @@
 // Created by erdem on 23.05.2022.
 //
 
-#include "../include/Core/Ray.h"
+#include "Ray.h"
 
 Ray::Ray(void)
 {

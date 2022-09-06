@@ -4,5 +4,5 @@ project(RayTracer)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -static-libstdc++")
 
-INCLUDE_DIRECTORIES(SYSTEM include/)
-add_executable(RayTracer main.cpp src/Vector.cpp include/Core/Vector.h include/Core/Color.h src/Ray.cpp include/Core/Ray.h include/Core/configs.h include/Core/Geometry.h include/Core/Sphere.h src/Sphere.cpp include/Core/Scene.h src/Scene.cpp include/utils.h src/Camera.cpp include/Core/Camera.h)
+INCLUDE_DIRECTORIES(SYSTEM src/)
+add_executable(RayTracer main.cpp src/Core/Vector.cpp src/Core/Vector.h src/Core/Color.h src/Core/Ray.cpp src/Core/Ray.h src/Core/configs.h src/Core/Geometry.h src/Core/Sphere.h src/Core/Sphere.cpp src/Core/Scene.h src/Core/Scene.cpp src/utils.h src/Core/Camera.cpp src/Core/Camera.h)

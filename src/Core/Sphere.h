@@ -16,5 +16,6 @@ public:
     Sphere();
     Sphere(Vector3 origin, real radius);
     virtual bool hit(const Ray &ray, real tMin, real tMax, HitPoint &hitPoint) const override;
+    static Vector3 RandomInUnitSphere();
 };
 #endif //RAYTRACER_SPHERE_H
