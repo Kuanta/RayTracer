@@ -1,5 +1,6 @@
 #include <iostream>
 #include <Core/Camera.h>
+#include <Core/Factory.h>
 #include "Core/Scene.h"
 #include "Core/Sphere.h"
 #include "Core/Ray.h"
@@ -27,19 +28,14 @@ int main() {
     Camera camera = Camera(viewPortHeight, viewPortWidth, focalLength);
 
     //Scene
+
     Scene scene;
-    Sphere* centerSphere = new Sphere(Vector3(0,0,-1), 0.5);
-    centerSphere->color = Vector3(0.5f, 0.2f, 0.9f);
+    Mesh centerSphere = Factory::CreateSphereMesh(Vector3(0,0,-1), 0.5);
+    Mesh groundSphere = Factory::CreateSphereMesh(Vector3(0,-100.5,-1), 100);
 
-    Sphere* leftSphere = new Sphere(Vector3(-0.9, 0.2, -1.5), 0.6);
-    leftSphere->color = Vector3(0.8f,0.4f,0.5f);
-
-    Sphere* groundSphere = new Sphere(Vector3(0,-100.5,-1), 100);
-    groundSphere->color = Vector3(0.2f, 0.9f, 0.4f);
-
-    scene.AddObject(centerSphere);
+    scene.AddObject(&centerSphere);
     //scene.AddObject(leftSphere);
-    scene.AddObject(groundSphere);
+    scene.AddObject(&groundSphere);
 
     std::cerr<<"Starting\n";
     std::cout << "P3\n" << imageWidth << " " << imageHeight << "\n255\n";
@@ -75,7 +71,7 @@ Color RayColor(const Scene &scene, const Ray& ray, int depth)
     Vector2 rayLimits = Vector2(0.01, 100);
     if(scene.CastRay(ray,  rayLimits, hitPoint))
     {
-        Vector3 target = hitPoint.point + hitPoint.normal + Sphere::RandomInUnitSphere().normalized();
+        Vector3 target = hitPoint.point + Sphere::RandomInHemisphere(hitPoint.normal);
         Ray bouncingRay = Ray(hitPoint.point, target - hitPoint.point);
         return RayColor(scene, bouncingRay, depth + 1) * 0.5;
 //        surfaceNormal.normalize();

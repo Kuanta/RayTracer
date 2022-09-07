@@ -1,9 +1,9 @@
 #include "Core/Scene.h"
 
 Scene::Scene() {
-    objects = std::vector<Geometry*>();
+    objects = std::vector<Mesh*>();
 }
-void Scene::AddObject(Geometry* mesh)
+void Scene::AddObject(Mesh* mesh)
 {
     objects.push_back(mesh);
 }
@@ -23,7 +23,7 @@ bool Scene::CastRay(const Ray &ray, Vector2 rayLimits, HitPoint &hitPoint) const
         {
             hit = true;
             minT = hitPoint.t;
-            hitPoint.color = objects.at(i)->color;
+            hitPoint.mesh = objects.at(i);
         }
     }
     return hit;

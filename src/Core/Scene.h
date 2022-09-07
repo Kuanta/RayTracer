@@ -6,16 +6,16 @@
 #define RAYTRACER_SCENE_H
 
 #include <vector>
-#include "Core/Geometry.h"
+#include "Core/Mesh.h"
 
 class Scene
 {
 public:
     Vector3 lightDirection;
-    std::vector<Geometry*> objects;
+    std::vector<Mesh*> objects;
     Scene();
-    void AddObject(Geometry* mesh);
-    void RemoveMesh(Geometry* mesh);
+    void AddObject(Mesh* mesh);
+    void RemoveObject(Mesh* mesh);
     void ClearObjectList();
     bool CastRay(const Ray &ray, Vector2 rayLimits, HitPoint &hitPoint) const;
 

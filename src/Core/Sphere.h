@@ -10,12 +10,12 @@
 class Sphere : public Geometry
 {
 public:
-    Vector3 center;
     real radius;
 
     Sphere();
-    Sphere(Vector3 origin, real radius);
+    Sphere(real radius);
     virtual bool hit(const Ray &ray, real tMin, real tMax, HitPoint &hitPoint) const override;
     static Vector3 RandomInUnitSphere();
+    static Vector3 RandomInHemisphere(Vector3 surfaceNormal);
 };
 #endif //RAYTRACER_SPHERE_H
