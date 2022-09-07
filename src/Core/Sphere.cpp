@@ -34,7 +34,7 @@ bool Sphere::hit(const Ray &ray, real tMin, real tMax, HitPoint &hitPoint) const
     Vector3 hitPosition = ray.GetPoint(t);
     Vector3 hitNormal = (hitPosition - center) / radius;
     hitPoint.point = hitPosition;
-    hitPoint.normal = hitNormal;
+    hitPoint.normal = hitNormal.normalized();
     hitPoint.t = t;
     return true;
 }

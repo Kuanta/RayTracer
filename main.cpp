@@ -1,6 +1,8 @@
 #include <iostream>
 #include <Core/Camera.h>
 #include <Core/Factory.h>
+#include <Materials/MetalicMaterial.h>
+#include <Materials/Lambertian.h>
 #include "Core/Scene.h"
 #include "Core/Sphere.h"
 #include "Core/Ray.h"
@@ -30,11 +32,12 @@ int main() {
     //Scene
 
     Scene scene;
-    Mesh centerSphere = Factory::CreateSphereMesh(Vector3(0,0,-1), 0.5);
-    Mesh groundSphere = Factory::CreateSphereMesh(Vector3(0,-100.5,-1), 100);
+    Mesh centerSphere = Factory::CreateSphereMesh(Vector3(0.7,0,-1), 0.5, new Lambertian(Vector3::Random()));
+    Mesh leftSphere = Factory::CreateSphereMesh(Vector3(-0.8, 0.1,-1.2), 0.6, new MetalicMaterial(Vector3(0.5,0.4,0.8)));
+    Mesh groundSphere = Factory::CreateSphereMesh(Vector3(0,-100.5,-1), 100, Vector3(0.5,0.8,0.9));
 
     scene.AddObject(&centerSphere);
-    //scene.AddObject(leftSphere);
+    scene.AddObject(&leftSphere);
     scene.AddObject(&groundSphere);
 
     std::cerr<<"Starting\n";
@@ -65,20 +68,20 @@ Color RayColor(const Scene &scene, const Ray& ray, int depth)
     if(depth >= RAY_DEPTH) {
         return Vector3(0,0,0);
     }
-    Vector3 lightDirection = Vector3(0.5f, -0.8f, -1.0f);
     //Check Sphere
     HitPoint hitPoint;
     Vector2 rayLimits = Vector2(0.01, 100);
     if(scene.CastRay(ray,  rayLimits, hitPoint))
     {
-        Vector3 target = hitPoint.point + Sphere::RandomInHemisphere(hitPoint.normal);
-        Ray bouncingRay = Ray(hitPoint.point, target - hitPoint.point);
-        return RayColor(scene, bouncingRay, depth + 1) * 0.5;
-//        surfaceNormal.normalize();
-//        real dotProd = (lightDirection * -1).dot(surfaceNormal);
-//        dotProd = std::max<real>(dotProd, 0);
-//        return hitPoint.color * dotProd;
+        Ray scattered;
+        Vector3 attenuation;
+        if(hitPoint.mesh->Material->Scatter(ray, hitPoint, attenuation, scattered))
+        {
+            return attenuation * RayColor(scene, scattered, depth++);
+        }
+        return Vector3(0,0,0);
     }
+
     Vector3 unitDirection = ray.Direction().normalized();
     real t = 0.5 * (unitDirection.y + 1.0f);
     return Vector3(1.0, 1.0, 1.0) * (1.0 - t) + Color(0.5, 0.7, 1.0) * t;

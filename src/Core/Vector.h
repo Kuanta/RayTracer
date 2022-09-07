@@ -18,24 +18,27 @@ public:
     real y;
     real z;
 
-    Vector3 operator+(const Vector3& v);
-    Vector3 operator-(const Vector3& v);
-    Vector3 operator*(const Vector3& v);
-    Vector3 operator*(const real& scalar);
-    Vector3 operator/(const Vector3& v);
-    Vector3 operator/(const real& v);
+    Vector3 operator+(const Vector3& v) const;
+    Vector3 operator-(const Vector3& v) const;
+    Vector3 operator*(const Vector3& v) const;
+    Vector3 operator*(const real& scalar) const;
+    Vector3 operator/(const Vector3& v) const;
+    Vector3 operator/(const real& v) const;
     void operator()(const Vector3& v);
     Vector3 projectOn(Vector3 v);
     Vector3 normalized();
     real getDistance(const Vector3& v);
     real magnitude();
     real sqrMagnitude();
-    real dot(Vector3 other);
+    real dot(const Vector3& other) const;
     std::string toString();
     void normalize();
 
     static Vector3 Random(real min, real max);
     static Vector3 Random();
+    static bool NearZero(Vector3 vector);
+
+
 };
 
 class Vector2

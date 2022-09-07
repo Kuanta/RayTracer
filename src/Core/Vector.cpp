@@ -14,29 +14,29 @@ Vector3::Vector3(real x, real y, real z)
     this->z = z;
 }
 
-Vector3 Vector3::operator+(const Vector3& v)
+Vector3 Vector3::operator+(const Vector3& v) const
 {
     return Vector3(this->x+v.x,this->y+v.y,this->z+v.z);
 }
 
 
-Vector3 Vector3::operator-(const Vector3& v)
+Vector3 Vector3::operator-(const Vector3& v) const
 {
     return Vector3(this->x-v.x,this->y-v.y,this->z-v.z);
 }
-Vector3 Vector3::operator*(const Vector3& v)
+Vector3 Vector3::operator*(const Vector3& v) const
 {
     return Vector3(this->x*v.x,this->y*v.y,this->z*v.z);
 }
-Vector3 Vector3::operator*(const real& scalar)
+Vector3 Vector3::operator*(const real& scalar) const
 {
     return Vector3(this->x*scalar,this->y*scalar,this->z*scalar);
 }
-Vector3 Vector3::operator/(const Vector3& v)
+Vector3 Vector3::operator/(const Vector3& v) const
 {
     return Vector3(this->x/v.x, this->y/v.y, this->z/v.z);
 }
-Vector3 Vector3::operator/(const real& v)
+Vector3 Vector3::operator/(const real& v) const
 {
     return Vector3(this->x/v, this->y/v, this->z/v);
 }
@@ -70,7 +70,7 @@ real Vector3::sqrMagnitude()
 {
     return this->x*this->x + this->y*this->y + this->z*this->z;
 }
-real Vector3::dot(Vector3 other)
+real Vector3::dot(const Vector3& other) const
 {
     return (x*other.x + y*other.y + z*other.z);
 }
@@ -96,6 +96,12 @@ Vector3 Vector3::Random()
 Vector3 Vector3::Random(real min, real max)
 {
     return Vector3(RayMath::Random(min, max), RayMath::Random(min, max), RayMath::Random(min, max));
+}
+
+bool Vector3::NearZero(Vector3 vector)
+{
+    const real epsilon = 1e-8;
+    return (fabs(vector.x) < epsilon) && (fabs(vector.y) < epsilon) && (fabs(vector.z) < epsilon);
 }
 
 //Vector2

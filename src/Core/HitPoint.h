@@ -15,6 +15,12 @@ struct HitPoint
     Vector3 normal;
     Vector3 point;
     real t;
+    //Static methods
+    static Vector3 Reflect(const Vector3& vector, const Vector3& normal)
+    {
+        real dot = vector.dot(normal);
+        return vector - normal * (2 * dot);
+    }
 };
 
 #endif //RAYTRACER_HITPOINT_H

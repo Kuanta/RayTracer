@@ -10,7 +10,8 @@
 
 class Factory {
 public:
-    static Mesh CreateSphereMesh(Vector3 position, float radius);
+    static Mesh CreateSphereMesh(Vector3 position, float radius, Vector3 color);
+    static Mesh CreateSphereMesh(Vector3 position, float radius, Material* material);
 };
 
 
