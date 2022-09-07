@@ -36,6 +36,14 @@ bool Sphere::hit(const Ray &ray, real tMin, real tMax, HitPoint &hitPoint) const
     hitPoint.point = hitPosition;
     hitPoint.normal = hitNormal.normalized();
     hitPoint.t = t;
+
+    if( hitPoint.normal.dot(ray.direction) > 0)
+    {
+        hitPoint.normal = -1 *hitPoint.normal;
+        hitPoint.isFrontFace = false;
+    }else{
+        hitPoint.isFrontFace = true;
+    }
     return true;
 }
 
