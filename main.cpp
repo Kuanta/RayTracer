@@ -3,19 +3,19 @@
 #include <Core/Factory.h>
 #include <Materials/MetalicMaterial.h>
 #include <Materials/Lambertian.h>
+#include <Materials/Dielectric.h>
 #include "Core/Scene.h"
-#include "Core/Sphere.h"
 #include "Core/Ray.h"
 #include "Core/Vector.h"
 #include "Core/Color.h"
 
-const int RAY_DEPTH = 50;
+const int RAY_DEPTH = 100;
 Color RayColor(const Scene &scene, const Ray& ray, int depth = 0);
 
 int main() {
 
     //rendering
-    int samplesPerPixel = 100;
+    int samplesPerPixel = 50;
 
     std::cerr<<"Starting\n";
     //Image
@@ -32,12 +32,14 @@ int main() {
     //Scene
 
     Scene scene;
-    Mesh centerSphere = Factory::CreateSphereMesh(Vector3(0.7,0,-1), 0.5, new Lambertian(Vector3::Random()));
+    Mesh centerSphere = Factory::CreateSphereMesh(Vector3(0,0,-1), 0.5, new Lambertian(Vector3::Random()));
+    Mesh rightSphere = Factory::CreateSphereMesh(Vector3(1,0,-1.2), 0.6, new Dielectric(Vector3(1,1,1), 1.5));
     Mesh leftSphere = Factory::CreateSphereMesh(Vector3(-0.8, 0.1,-1.2), 0.6, new MetalicMaterial(Vector3(0.5,0.4,0.8)));
     Mesh groundSphere = Factory::CreateSphereMesh(Vector3(0,-100.5,-1), 100, Vector3(0.5,0.8,0.9));
 
     scene.AddObject(&centerSphere);
     scene.AddObject(&leftSphere);
+    scene.AddObject(&rightSphere);
     scene.AddObject(&groundSphere);
 
     std::cerr<<"Starting\n";
@@ -45,6 +47,7 @@ int main() {
     for(int h = imageHeight - 1; h >= 0; --h)
     {
         std::cerr<<"\rScanlines Remaining:"<< h << ' '<<std::flush;
+
         for(int w = 0; w < imageWidth; ++w)
         {
             Color finalColor(0,0,0);
@@ -53,6 +56,7 @@ int main() {
                 auto u = (w + RayMath::Random()) / (imageWidth - 1);
                 auto v = (h + RayMath::Random()) / (imageHeight - 1);
                 Ray ray = camera.GetRay(u, v);
+
                 Color sampleColor = RayColor(scene, ray, 0);
                 finalColor = finalColor+sampleColor;
             }
@@ -77,7 +81,7 @@ Color RayColor(const Scene &scene, const Ray& ray, int depth)
         Vector3 attenuation;
         if(hitPoint.mesh->Material->Scatter(ray, hitPoint, attenuation, scattered))
         {
-            return attenuation * RayColor(scene, scattered, depth++);
+            return attenuation * RayColor(scene, scattered, depth+1);
         }
         return Vector3(0,0,0);
     }

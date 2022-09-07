@@ -21,7 +21,6 @@ public:
     Vector3 operator+(const Vector3& v) const;
     Vector3 operator-(const Vector3& v) const;
     Vector3 operator*(const Vector3& v) const;
-    Vector3 operator*(const real& scalar) const;
     Vector3 operator/(const Vector3& v) const;
     Vector3 operator/(const real& v) const;
     void operator()(const Vector3& v);
@@ -40,6 +39,14 @@ public:
 
 
 };
+
+inline Vector3 operator*(double t, const Vector3 &v) {
+    return Vector3(t*v.x, t*v.y, t*v.z);
+}
+
+inline Vector3 operator*(const Vector3 &v, double t) {
+    return t * v;
+}
 
 class Vector2
 {

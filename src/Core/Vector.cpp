@@ -28,10 +28,7 @@ Vector3 Vector3::operator*(const Vector3& v) const
 {
     return Vector3(this->x*v.x,this->y*v.y,this->z*v.z);
 }
-Vector3 Vector3::operator*(const real& scalar) const
-{
-    return Vector3(this->x*scalar,this->y*scalar,this->z*scalar);
-}
+
 Vector3 Vector3::operator/(const Vector3& v) const
 {
     return Vector3(this->x/v.x, this->y/v.y, this->z/v.z);
@@ -64,7 +61,7 @@ real Vector3::getDistance(const Vector3& v)
 }
 real Vector3::magnitude()
 {
-    return sqrt(sqrMagnitude());
+    return sqrt(x*x + y*y + z*z);
 }
 real Vector3::sqrMagnitude()
 {
