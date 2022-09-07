@@ -10,11 +10,12 @@ void write_color(std::ostream &out, Color pixel_color, int samplesPerPixel) {
     real green = pixel_color.y;
     real blue = pixel_color.z;
 
+    //Gamma correction
     real scale = 1.0 / samplesPerPixel;
 
-    red *= scale;
-    green *= scale;
-    blue *= scale;
+    red = sqrt(scale * red);
+    green = sqrt(scale*green);
+    blue = sqrt(scale * blue);
 
     // Write the translated [0,255] value of each color component.
     out << static_cast<int>(256 * RayMath::Clamp(red, 0.0, 0.999)) << ' '

@@ -72,10 +72,10 @@ Color RayColor(const Scene &scene, const Ray& ray, int depth)
     Vector3 lightDirection = Vector3(0.5f, -0.8f, -1.0f);
     //Check Sphere
     HitPoint hitPoint;
-    Vector2 rayLimits = Vector2(0, 100);
+    Vector2 rayLimits = Vector2(0.01, 100);
     if(scene.CastRay(ray,  rayLimits, hitPoint))
     {
-        Vector3 target = hitPoint.point + hitPoint.normal + Sphere::RandomInUnitSphere();
+        Vector3 target = hitPoint.point + hitPoint.normal + Sphere::RandomInUnitSphere().normalized();
         Ray bouncingRay = Ray(hitPoint.point, target - hitPoint.point);
         return RayColor(scene, bouncingRay, depth + 1) * 0.5;
 //        surfaceNormal.normalize();
