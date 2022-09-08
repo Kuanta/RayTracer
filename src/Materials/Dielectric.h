@@ -18,7 +18,8 @@ public:
     Dielectric(Vector3 color, real refractionFactor);
 
     virtual bool Scatter(const Ray &ray, const HitPoint &hitPoint, Vector3 &attenuation, Ray &scattered) const override;
-
+private:
+    static double Reflectance(double cosine, double refIdx);
 };
 
 

@@ -30,6 +30,7 @@ public:
     real magnitude();
     real sqrMagnitude();
     real dot(const Vector3& other) const;
+    Vector3 cross(const Vector3& other) const;
     std::string toString();
     void normalize();
 
@@ -40,12 +41,12 @@ public:
 
 };
 
-inline Vector3 operator*(double t, const Vector3 &v) {
+inline Vector3 operator*(real t, const Vector3 &v) {
     return Vector3(t*v.x, t*v.y, t*v.z);
 }
 
-inline Vector3 operator*(const Vector3 &v, double t) {
-    return t * v;
+inline Vector3 operator*(const Vector3 &v, real t) {
+    return Vector3(t*v.x, t*v.y, t*v.z);
 }
 
 class Vector2
