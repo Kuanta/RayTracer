@@ -11,7 +11,7 @@ class Mesh;
 
 struct HitPoint
 {
-    Mesh* mesh;
+    const Mesh* mesh;
     Vector3 normal;
     Vector3 point;
     bool isFrontFace;

@@ -21,7 +21,8 @@ public:
 public:
     Mesh();
     Mesh(class Geometry* geometry, class Material* material);
-    bool hit(const Ray &ray, real tMin, real tMax, HitPoint &hitPoint) const;
+    virtual bool hit(const Ray &ray, real tMin, real tMax, HitPoint &hitPoint) const;
+    virtual bool boundingBox(AxisAlignedBoundingBox& bondingBox) const;
 };
 
 

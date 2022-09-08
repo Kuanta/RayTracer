@@ -48,6 +48,18 @@ Vector3 Vector3::normalized()
     real mag = this->magnitude();
     return Vector3(this->x / mag, this->y / mag, this->z / mag);
 }
+real Vector3::getDimension(int index) const{
+    switch (index) {
+        case 0:
+            return x;
+        case 1:
+            return y;
+        case 2:
+            return z;
+        default:
+            return x;
+    }
+}
 Vector3 Vector3::projectOn(Vector3 v)
 {
     Vector3 normV = v.normalized();

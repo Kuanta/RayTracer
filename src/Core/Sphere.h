@@ -15,6 +15,7 @@ public:
     Sphere();
     Sphere(real radius);
     virtual bool hit(const Ray &ray, real tMin, real tMax, HitPoint &hitPoint) const override;
+    virtual bool boundingBox(AxisAlignedBoundingBox& bondingBox) const override;
     static Vector3 RandomInUnitSphere();
     static Vector3 RandomInHemisphere(Vector3 surfaceNormal);
 };

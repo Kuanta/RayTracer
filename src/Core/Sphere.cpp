@@ -46,6 +46,14 @@ bool Sphere::hit(const Ray &ray, real tMin, real tMax, HitPoint &hitPoint) const
     }
     return true;
 }
+bool Sphere::boundingBox(AxisAlignedBoundingBox& boundingBox) const
+{
+    boundingBox = AxisAlignedBoundingBox(
+            mesh->position - Vector3(radius, radius, radius),
+            mesh->position + Vector3(radius, radius, radius)
+            );
+    return true;
+}
 
 Vector3 Sphere::RandomInUnitSphere()
 {

@@ -24,8 +24,10 @@ public:
     Vector3 operator/(const Vector3& v) const;
     Vector3 operator/(const real& v) const;
     void operator()(const Vector3& v);
+
     Vector3 projectOn(Vector3 v);
     Vector3 normalized();
+    real getDimension(int index) const;
     real getDistance(const Vector3& v);
     real magnitude();
     real sqrMagnitude();

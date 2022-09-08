@@ -21,5 +21,12 @@ bool Mesh::hit(const Ray &ray, real tMin, real tMax, HitPoint &hitPoint) const {
     {
         return false;
     }
-    return Geometry->hit(ray, tMin, tMax, hitPoint);
+    bool result = Geometry->hit(ray, tMin, tMax, hitPoint);
+    if(result) hitPoint.mesh = this;
+    return result;
+}
+
+bool Mesh::boundingBox(AxisAlignedBoundingBox &bondingBox) const{
+    if(Geometry == nullptr) return false;
+    return Geometry->boundingBox(bondingBox);
 }

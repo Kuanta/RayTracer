@@ -25,6 +25,11 @@ public:
         return min + (max - min) * randomNormal;
     }
 
+    static int RandomInt(int min, int max)
+    {
+        return static_cast<int>(Random(min, max+1));
+    }
+
     inline static real Clamp(real value, real min, real max)
     {
         if(value < min) return min;

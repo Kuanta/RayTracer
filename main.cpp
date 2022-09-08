@@ -3,7 +3,6 @@
 #include <Core/Factory.h>
 #include <Materials/MetalicMaterial.h>
 #include <Materials/Lambertian.h>
-#include <Materials/Dielectric.h>
 #include <stdlib.h>
 #include "Core/Scene.h"
 #include "Core/Ray.h"
@@ -16,7 +15,7 @@ Color RayColor(const Scene &scene, const Ray& ray, int depth = 0);
 int main() {
     srand ((unsigned)time(0));
     //rendering
-    int samplesPerPixel = 100;
+    int samplesPerPixel = 200;
 
     std::cerr<<"Starting\n";
     //Image
@@ -24,25 +23,24 @@ int main() {
 
 
     //Camera
-    Vector3 cameraPosition(10, 10, -10);
+    Vector3 cameraPosition(10, 12, -15);
     Vector3 lookAt(0,1,0);
     Vector3 up(0,1,0);
     Camera camera = Camera(cameraPosition, lookAt, up, aspectRatio , 60, 0, 1);
-    const int imageWidth = 1200;
+    const int imageWidth = 1920;
     const int imageHeight = static_cast<int>(imageWidth / aspectRatio);
 
 
     //Scene
-
     Scene scene;
     real cellSpace = 6.0f;
 
     //Create random Scene
-    for(int i=-10;i<11;++i)
+    for(int i=-5;i<5;++i)
     {
-        for(int j=-10;j<11; j++)
+        for(int j=-5;j<5; j++)
         {
-            if(j == 0 && i == 0) continue;
+            if(fabs(j) < 1 && fabs(i) < 1) continue;
             real radius = RayMath::Random(0.5, 2.5);
 
             Vector3 position(i*cellSpace, radius, j*cellSpace);
@@ -50,16 +48,12 @@ int main() {
             scene.AddObject(sphere);
         }
     }
-    Mesh* centerSphere = Factory::CreateSphereMesh(Vector3(0,0,0), 5, new MetalicMaterial(Vector3(1,1,1)));
-//    Mesh centerSphere = Factory::CreateSphereMesh(Vector3(0.9,0.3,-2), 1, new Lambertian(Vector3::Random(0,1)));
-//    Mesh rightSphere = Factory::CreateSphereMesh(Vector3(-1,1,-2), 1, new Dielectric(Vector3(1,1,1), 1.5));
-//    Mesh leftSphere = Factory::CreateSphereMesh(Vector3(-0.5, 0.25,1), 0.5, new MetalicMaterial(Vector3(0.5,0.4,0.8)));
-      Mesh* groundSphere = Factory::CreateSphereMesh(Vector3(0,-1000.5,-1), 1000, Vector3(0.5,0.8,0.9));
+    Mesh* centerSphere = Factory::CreateSphereMesh(Vector3(0,5,0), 5, new MetalicMaterial(Vector3(1,1,1)));
+    Mesh* groundSphere = Factory::CreateSphereMesh(Vector3(0,-1000.5,-1), 1000, Vector3(0.5,0.8,0.9));
 
-      scene.AddObject(centerSphere);
-//    scene.AddObject(&leftSphere);
-//    scene.AddObject(&rightSphere);
-      scene.AddObject(groundSphere);
+    scene.AddObject(centerSphere);
+    scene.AddObject(groundSphere);
+    //scene.ConstructBVH();
 
     std::cerr<<"Starting\n";
     std::cout << "P3\n" << imageWidth << " " << imageHeight << "\n255\n";
@@ -98,7 +92,7 @@ Color RayColor(const Scene &scene, const Ray& ray, int depth)
     {
         Ray scattered;
         Vector3 attenuation;
-        if(hitPoint.mesh->Material->Scatter(ray, hitPoint, attenuation, scattered))
+        if(hitPoint.mesh->Material != nullptr && hitPoint.mesh->Material->Scatter(ray, hitPoint, attenuation, scattered))
         {
             return attenuation * RayColor(scene, scattered, depth+1);
         }
