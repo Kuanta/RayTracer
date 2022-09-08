@@ -23,7 +23,7 @@ Camera::Camera(Vector3 position, Vector3 lookAt, Vector3 up, float aspectRatio, 
     lensRadius = aperture / 2;
 }
 
-Ray Camera::GetRay(real u, real v)
+Ray Camera::GetRay(real u, real v) const
 {
     Vector3 random = lensRadius * Sphere::RandomInUnitSphere();
     Vector3 offset = this->u * random.x + this->v*random.y;

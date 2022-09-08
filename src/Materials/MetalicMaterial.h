@@ -9,7 +9,7 @@
 
 class MetalicMaterial : public Material{
 public:
-    real fuzzyConstant = 0.1;
+    real fuzzyConstant = 0.01;
 
 public:
     MetalicMaterial(Vector3 color);

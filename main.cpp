@@ -4,23 +4,22 @@
 #include <Materials/MetalicMaterial.h>
 #include <Materials/Lambertian.h>
 #include <stdlib.h>
+#include <Core/RayTracer.h>
 #include "Core/Scene.h"
-#include "Core/Ray.h"
 #include "Core/Vector.h"
-#include "Core/Color.h"
 
-const int RAY_DEPTH = 50;
-Color RayColor(const Scene &scene, const Ray& ray, int depth = 0);
 
-int main() {
+int main(int argc, char *argv[]) {
+
+    int RAY_DEPTH = 50;
+    int SAMPLES_PER_PIXEL = 100;
+
     srand ((unsigned)time(0));
     //rendering
-    int samplesPerPixel = 200;
 
     std::cerr<<"Starting\n";
     //Image
-    const float aspectRatio =16.0/9.0;
-
+    const float aspectRatio = 16.0/9.0;
 
     //Camera
     Vector3 cameraPosition(10, 12, -15);
@@ -53,53 +52,14 @@ int main() {
 
     scene.AddObject(centerSphere);
     scene.AddObject(groundSphere);
-    //scene.ConstructBVH();
+    scene.ConstructBVH();
 
-    std::cerr<<"Starting\n";
-    std::cout << "P3\n" << imageWidth << " " << imageHeight << "\n255\n";
-    for(int h = imageHeight - 1; h >= 0; --h)
-    {
-        std::cerr<<"\rScanlines Remaining:"<< h << ' '<<std::flush;
+    //Ray Tracer
+    RayTracer rayTracer(&scene, &camera, imageWidth, imageHeight);
+    rayTracer.SamplesPerPixel = SAMPLES_PER_PIXEL;
+    rayTracer.RayDepth = RAY_DEPTH;
+    rayTracer.RayTrace();
+    rayTracer.OutputResult(std::cout);
 
-        for(int w = 0; w < imageWidth; ++w)
-        {
-            Color finalColor(0,0,0);
-            for(int s = 0;s < samplesPerPixel; ++s)
-            {
-                auto u = (w + RayMath::Random()) / (imageWidth - 1);
-                auto v = (h + RayMath::Random()) / (imageHeight - 1);
-                Ray ray = camera.GetRay(u, v);
-
-                Color sampleColor = RayColor(scene, ray, 0);
-                finalColor = finalColor+sampleColor;
-            }
-            write_color(std::cout, finalColor, samplesPerPixel);
-        }
-    }
-
-    std::cerr<<"\nDone\n";
 }
 
-Color RayColor(const Scene &scene, const Ray& ray, int depth)
-{
-    if(depth >= RAY_DEPTH) {
-        return Vector3(0,0,0);
-    }
-    //Check Sphere
-    HitPoint hitPoint;
-    Vector2 rayLimits = Vector2(0.01, INT_MAX);
-    if(scene.CastRay(ray,  rayLimits, hitPoint))
-    {
-        Ray scattered;
-        Vector3 attenuation;
-        if(hitPoint.mesh->Material != nullptr && hitPoint.mesh->Material->Scatter(ray, hitPoint, attenuation, scattered))
-        {
-            return attenuation * RayColor(scene, scattered, depth+1);
-        }
-        return Vector3(0,0,0);
-    }
-
-    Vector3 unitDirection = ray.Direction().normalized();
-    real t = 0.5 * (unitDirection.y + 1.0f);
-    return Vector3(1.0, 1.0, 1.0) * (1.0 - t) + Color(0.5, 0.7, 1.0) * t;
-}

@@ -15,7 +15,7 @@ public:
     float focalLength;
 
     Camera(Vector3 position, Vector3 lookAt, Vector3 up, float aspectRatio, float verticalFov, float aperture, float focusDist);
-    Ray GetRay(real u, real v);
+    Ray GetRay(real u, real v) const;
 
 private:
 
